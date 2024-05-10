@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware.js";
 import {Account} from "../db.js"
-import mongoose from "mongoose";
+
 
 const router = Router();
 
@@ -9,7 +9,7 @@ router.get("/balance", authMiddleware, async (req, res) => {
   const account = await Account.findOne({
     userId: req.userId,
   });
-  res.json({
+  res.send({
     balance: account.balance,
   });
 });
@@ -22,7 +22,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     });
 
     if (account.balance < amount) {
-        return res.status(400).json({
+        return res.status(400).send({
             message: "Insufficient balance"
         })
     }
@@ -32,7 +32,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     });
 
     if (!toAccount) {
-        return res.status(400).json({
+        return res.status(400).send({
             message: "Invalid account"
         })
     }
